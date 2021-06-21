@@ -3,8 +3,8 @@ repos:
   rev: 5.8.0
   hooks:
     - id: isort
-      args: ["--multi-line=5", "--line-length=120", "--use-parentheses", "--filter-files"]
-      exclude: "codingtest"
+      args: ["--multi-line=5", "--line-length=79", "--use-parentheses", "--filter-files"]
+      exclude: "venv"
 - repo: https://github.com/pycqa/flake8
   rev: 3bcadce2a9d91f4bb6afa97b5d2d1a82d7a1e937
   hooks:
