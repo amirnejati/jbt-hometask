@@ -1,5 +1,5 @@
 import re
-from typing import AsyncGenerator, Set, Tuple
+from typing import AsyncGenerator, Set, Tuple, List
 from urllib.parse import urlencode
 
 import httpx
@@ -68,30 +68,31 @@ class Github:
             response = await client.get(url, headers=self.request_headers)
             self.response_headers = response.headers
 
+        if response.status_code == 404:
+            yield set(), True
+            return
         if response.status_code >= 400:
-            if response.status_code == 404:
-                yield set(), True
-            else:
-                raise Exception(response.text)
+            raise Exception(response.text)
 
-        if response.status_code == 200:
-            yield {item['login'] for item in response.json()}, False
+        yield {item['login'] for item in response.json()}, False
 
-            if self._continue_pagination():
-                async for result in self._get_organizations(username=username):
-                    yield result
+        if self._continue_pagination():
+            async for result in self._get_organizations(username=username):
+                yield result
 
-    async def get_organizations(self, username: str) -> Tuple[Set[str], bool]:
+    async def get_organizations(self, username: str) \
+            -> Tuple[Set[str], List[str]]:
         """
         A wrapper method for calling :py:meth:`Github._get_organizations`.
         For :param & :return values, please refer to the origin method.
         """
 
+        data = set()
         func = self._get_organizations(username=username)
-        data, has_errors = set(), False
 
         async for result, err in func:
+            if err:
+                return result, [f'"{username}" is not a valid user in github']
             data = data.union(result)
-            has_errors |= err
 
-        return data, has_errors
+        return data, []

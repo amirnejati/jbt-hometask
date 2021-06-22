@@ -32,9 +32,9 @@ class Twitter:
             raise Exception(response.text)
 
         for i in response.json().get('data', []):
-            yield False, i['username']
+            yield i['username'], False
         for i in response.json().get('errors', []):
-            yield True, i['value']
+            yield i['value'], True
 
     async def check_friendship(
             self, source_user: str, target_user: str,
@@ -50,16 +50,6 @@ class Twitter:
             - the list returns errors if there are any, in str format
         """
 
-        errors = []
-        async for has_error, username in self._check_users(
-                source_user,
-                target_user,
-        ):
-            errors.append(f'{username} is not a valid user in twitter') \
-                if has_error else None
-        if errors:
-            return False, errors
-
         url = (
             f'{self.base_url}/1.1/friendships/show.json'
             f'?source_screen_name={source_user}'
@@ -67,7 +57,24 @@ class Twitter:
         )
         async with httpx.AsyncClient() as client:
             response = await client.get(url, headers=self.request_headers)
+
+        if response.status_code == 404:
+            errors = []
+            async for username, has_error in self._check_users(
+                    source_user,
+                    target_user,
+            ):
+                errors.append(f'"{username}" is not a valid user in twitter') \
+                    if has_error else None
+            if errors:
+                return False, errors
+
+        if response.status_code >= 400:
+            raise Exception(response.text)
+
         relationship = response.json()['relationship']['source']
-        return (True, []) \
-            if relationship['following'] and relationship['followed_by'] \
-            else (False, [])
+
+        if relationship['following'] and relationship['followed_by']:
+            return True, []
+        else:
+            return False, []
