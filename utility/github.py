@@ -11,15 +11,17 @@ class Github:
         'Accept': 'application/vnd.github.v3+json',
     }
 
-    def __init__(self):
+    def __init__(self, token: str = None):
+        if token:
+            self.request_headers.update({'Authorization': f'token {token}'})
         self.pagination_params = {'page': 1, 'per_page': 100}
         self.response_headers = {}
 
-    def continue_pagination(self) -> bool:
+    def _continue_pagination(self) -> bool:
         """
-        this method enables paginating data returned from Github.
+        This method enables paginating data returned from Github.
         Based on Github API docs, it uses 'Link' header to determine
-        paginate status
+        paginate status.
 
         for more details:
         https://docs.github.com/en/rest/guides/traversing-with-pagination
@@ -49,7 +51,7 @@ class Github:
     async def _get_organizations(self, username: str) \
             -> AsyncGenerator[Tuple[Set[str], bool], None]:
         """
-        a private method which calls Github API to get organizations related
+        A private method which calls Github API to get organizations related
         to an account.
 
         :param
@@ -66,21 +68,23 @@ class Github:
             response = await client.get(url, headers=self.request_headers)
             self.response_headers = response.headers
 
-        if response.status_code == 403:
-            raise ConnectionRefusedError('api limit reached')
-        if response.status_code == 404:
-            yield set(), True
+        if response.status_code >= 400:
+            if response.status_code == 404:
+                yield set(), True
+            else:
+                raise Exception(response.text)
+
         if response.status_code == 200:
             yield {item['login'] for item in response.json()}, False
 
-            if self.continue_pagination():
+            if self._continue_pagination():
                 async for result in self._get_organizations(username=username):
                     yield result
 
-    async def get_organizations(self, username) -> Tuple[Set[str], bool]:
+    async def get_organizations(self, username: str) -> Tuple[Set[str], bool]:
         """
-        a wrapper method for calling :py:meth:`Github._get_organizations`.
-        For :param & :return values refer to the origin method
+        A wrapper method for calling :py:meth:`Github._get_organizations`.
+        For :param & :return values, please refer to the origin method.
         """
 
         func = self._get_organizations(username=username)
@@ -91,9 +95,3 @@ class Github:
             has_errors |= err
 
         return data, has_errors
-
-
-# import asyncio
-# g = Github()
-# x = asyncio.run(g.get_organizations(username='mitsuhiko'))
-# print(x)

@@ -5,17 +5,15 @@ import httpx
 
 class Twitter:
     base_url = 'https://api.twitter.com'
-    headers = {}
+    request_headers = {}
 
     def __init__(self, token: str):
-        self.headers.update({
-            'Authorization': f'Bearer {token}',
-        })
+        self.request_headers.update({'Authorization': f'Bearer {token}'})
 
     async def _check_users(self, *users: str) \
             -> AsyncGenerator[Tuple[bool, str], None]:
         """
-        validates account handlers on Twitter
+        Validates account handlers on Twitter.
 
         :return: a tuple of boolean and str which
             - the boolean value is True when there is any error
@@ -28,10 +26,10 @@ class Twitter:
         )
 
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, headers=self.headers)
+            response = await client.get(url, headers=self.request_headers)
 
-        if response.status_code != 200:
-            raise ValueError
+        if response.status_code >= 400:
+            raise Exception(response.text)
 
         for i in response.json().get('data', []):
             yield False, i['username']
@@ -42,8 +40,8 @@ class Twitter:
             self, source_user: str, target_user: str,
     ) -> Tuple[bool, List[str]]:
         """
-        shows friendship between two accounts.
-        friendship means both users follow each other
+        Shows friendship between two accounts. Friendship means both users
+        follow each other.
 
         :return: a tuple of a boolean and list of str which
             - the boolean value shows whether the given accounts have
@@ -68,14 +66,8 @@ class Twitter:
             f'&target_screen_name={target_user}'
         )
         async with httpx.AsyncClient() as client:
-            response = await client.get(url, headers=self.headers)
+            response = await client.get(url, headers=self.request_headers)
         relationship = response.json()['relationship']['source']
         return (True, []) \
             if relationship['following'] and relationship['followed_by'] \
             else (False, [])
-
-
-# import asyncio
-# t = Twitter('AAAAAAAAAAAAAAAAAAAAAM1dQwEAAAAAGu%2FQtXL0dKjgcGWqkls3lN1nA0A%3DyFC1vU8PwHFM6YegygqtJvrJgODMg6LpKYf59ZG3Fb5auT4sD9')
-# x = asyncio.run(t.check_friendship('amirhnejatii', 'bitcodr'))
-# print(x)

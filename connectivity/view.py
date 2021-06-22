@@ -2,23 +2,22 @@ import asyncio
 
 from fastapi import APIRouter
 
-from services.github import Github
-from services.twitter import Twitter
+from services import GithubFactory, TwitterFactory
+
 
 connectivity_router = APIRouter()
 
 
-@connectivity_router.get("/realtime/{dev1}/{dev2}", tags=["users"])
-async def read_users(dev1, dev2):
+@connectivity_router.get("/realtime/{user1}/{user2}", tags=["users"])
+async def read_users(user1, user2):
     results = await asyncio.gather(
-        Github.get_organizations(dev1),
-        Github.get_organizations(dev2),
-        Twitter.get_organizations(dev1),
-        Twitter.get_organizations(dev2),
+        GithubFactory().get_organizations(user1),
+        GithubFactory().get_organizations(user2),
+        TwitterFactory().check_friendship(user1, user2),
     )
     print(results)
 
-    return [{"username": dev1}, {"username": dev2}]
+    return [{"username1": user1}, {"username2": user2}]
 
 
 @connectivity_router.get("/register/{dev1}/{dev2}", tags=["users"])
