@@ -1,19 +1,17 @@
 # import uvicorn
 from fastapi import FastAPI
 
-from config import Config
-from connectivity.view import connectivity_router
+import modules.connectivity.api.rest.v1.view as connectivity_view_v1
 
 app = FastAPI(
-    title="LBS api",
-    description="""location base services""",
+    title="JobAndTalent Coding Test",
+    description="""job position: \"senior software developer \"""",
     version="0.0.1",
     # docs_url="/docsss",#setting.DOC_URL,
-    # servers=[{"url": f"http://{setting.HOST}:{setting.GENERAL_URL_PORT}"}, {"url": ""}]
 )
 
 
-app.include_router(router=connectivity_router, prefix='/connected')
+app.include_router(router=connectivity_view_v1.router, prefix='/v1/connected')
 
 
 # asgi_app = SentryAsgiMiddleware(app)

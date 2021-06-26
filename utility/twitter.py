@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, List, Tuple
+from typing import AsyncGenerator, List, Tuple, Optional
 
 import httpx
 
@@ -38,15 +38,14 @@ class Twitter:
 
     async def check_friendship(
             self, source_user: str, target_user: str,
-    ) -> Tuple[bool, List[str]]:
+    ) -> Tuple[Optional[bool], List[str]]:
         """
         Shows friendship between two accounts. Friendship means both users
         follow each other.
 
         :return: a tuple of a boolean and list of str which
             - the boolean value shows whether the given accounts have
-              friendship relation or not. in case of errors this value is
-              always False!
+              friendship relation or not. in case of errors this value is NULL!
             - the list returns errors if there are any, in str format
         """
 
@@ -67,7 +66,7 @@ class Twitter:
                 errors.append(f'"{username}" is not a valid user in twitter') \
                     if has_error else None
             if errors:
-                return False, errors
+                return None, errors
 
         if response.status_code >= 400:
             raise Exception(response.text)
