@@ -1,39 +1,55 @@
 import re
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 
-class DeveloperAccount(BaseModel):
-    username: str
+class OnlineAccount(str):
 
-    @validator('username')
-    def username_validity(cls, v: str) -> str:
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_twitter_username
+        yield cls.validate_github_username
+
+    @classmethod
+    def validate_twitter_username(cls, v: str) -> str:
         """
         for more info about the rules & patterns used refer to:
-            - https://help.twitter.com/en/managing-your-account/twitter-username-rules
-            - https://github.com/join
+        https://help.twitter.com/en/managing-your-account/twitter-username-rules
         """
 
+        if not isinstance(v, str):
+            raise TypeError('string required')
         twitter_username_regex = r'^[a-zA-Z0-9_]{1,15}$'
+        if re.search(twitter_username_regex, v):
+            return cls(v)
+        raise ValueError(
+            f'username "{v}" sounds to be an invalid account in Twitter. '
+            f'Twitter regex pattern: {twitter_username_regex}'
+        )
+
+    @classmethod
+    def validate_github_username(cls, v: str) -> str:
+        """
+        for more info about the rules & patterns used refer to:
+        https://github.com/join
+        """
+
+        if not isinstance(v, str):
+            raise TypeError('string required')
         github_username_regex = \
             r'^[a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38}$'
-
-        if re.search(twitter_username_regex, v) and \
-                re.search(github_username_regex, v):
-            return v
-
+        if re.search(github_username_regex, v):
+            return cls(v)
         raise ValueError(
-            f'username "{v}" sounds to be an invalid account in either '
-            'Twitter or Github, or the both.\n'
-            f'Twitter regex pattern: {twitter_username_regex}\n'
+            f'username "{v}" sounds to be an invalid account in Github. '
             f'Github regex pattern: {github_username_regex}'
         )
 
 
 class RealtimeItem(BaseModel):
     connected: bool
-    organisations: Optional[List[DeveloperAccount]] = None
+    organisations: Optional[List[OnlineAccount]] = None
 
 
 class RegisterItem(RealtimeItem):

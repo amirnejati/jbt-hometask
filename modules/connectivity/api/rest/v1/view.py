@@ -22,8 +22,8 @@ router = APIRouter()
     response_model=schemas.RealtimeItem,
 )
 async def realtime(
-        dev1: str,
-        dev2: str,
+        dev1: schemas.OnlineAccount,
+        dev2: schemas.OnlineAccount,
         background_tasks: BackgroundTasks,
         response: Response,
 ) -> Any:
@@ -57,11 +57,11 @@ async def realtime(
     response_model=List[schemas.RegisterItem],
 )
 async def register(
-        dev1: str = Path(...),
-        dev2: str = Path(...),
+        dev1: schemas.OnlineAccount,
+        dev2: schemas.OnlineAccount,
 ) -> Any:
     return [{
         'connected': 'True',
         'registered_at': '2019-09-27T12:34:00Z',
-        'path': f'{dev1}\t{dev2}'
+        'path-parameters': [dev1, dev2]
     }]
