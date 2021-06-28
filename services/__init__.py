@@ -18,11 +18,11 @@ class GithubFactory(Github):
     def __init__(self):
         super(GithubFactory, self).__init__(Config.GITHUB_ACCESS_TOKEN)
 
-    async def organizations_in_common(self, *users: str) \
+    async def organisations_in_common(self, *users: str) \
             -> Tuple[List[str], List[str]]:
 
         results = await asyncio.gather(
-            *(self.get_organizations(u) for u in users),
+            *(self.get_organisations(u) for u in users),
         )
 
         common_orgs, errors = reduce(
@@ -39,6 +39,6 @@ if __name__ == '__main__':
     # print(x)
 
     g = GithubFactory()
-    # x = asyncio.run(g.get_organizations(username='mitsuhiko'))
-    # x, y = asyncio.run(g.organizations_in_common('mitsuhiko', 'davidism'))
+    # x = asyncio.run(g.get_organisations(username='mitsuhiko'))
+    # x, y = asyncio.run(g.organisations_in_common('mitsuhiko', 'davidism'))
     # print(x, y)

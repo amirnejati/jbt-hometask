@@ -48,10 +48,10 @@ class Github:
             return True
         return False
 
-    async def _get_organizations(self, username: str) \
+    async def _get_organisations(self, username: str) \
             -> AsyncGenerator[Tuple[Set[str], bool], None]:
         """
-        A private method which calls Github API to get organizations related
+        A private method which calls Github API to get organisations related
         to an account.
 
         :param
@@ -77,18 +77,18 @@ class Github:
         yield {item['login'] for item in response.json()}, False
 
         if self._continue_pagination():
-            async for result in self._get_organizations(username=username):
+            async for result in self._get_organisations(username=username):
                 yield result
 
-    async def get_organizations(self, username: str) \
+    async def get_organisations(self, username: str) \
             -> Tuple[Set[str], List[str]]:
         """
-        A wrapper method for calling :py:meth:`Github._get_organizations`.
+        A wrapper method for calling :py:meth:`Github._get_organisations`.
         For :param & :return values, please refer to the origin method.
         """
 
         data = set()
-        func = self._get_organizations(username=username)
+        func = self._get_organisations(username=username)
 
         async for result, err in func:
             if err:

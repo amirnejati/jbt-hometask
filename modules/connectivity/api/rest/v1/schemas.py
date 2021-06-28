@@ -1,5 +1,6 @@
 import re
 from typing import List, Optional
+import ujson
 
 from pydantic import BaseModel
 
@@ -50,6 +51,9 @@ class OnlineAccount(str):
 class RealtimeItem(BaseModel):
     connected: bool
     organisations: Optional[List[OnlineAccount]] = None
+
+    class Config:
+        json_loads = ujson.loads
 
 
 class RegisterItem(RealtimeItem):
