@@ -54,6 +54,7 @@ class RealtimeItem(BaseModel):
 
     class Config:
         json_loads = ujson.loads
+        orm_mode = True
 
 
 class RegisterItem(RealtimeItem):

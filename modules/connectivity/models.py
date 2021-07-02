@@ -1,12 +1,12 @@
 from sqlalchemy import (
-    JSON, Column, Integer, String, Index
+    JSON, Column, Integer, String, Index,
     # DateTime, Boolean, func
 )
 
-from db import BaseModel
+from db import Base
 
 
-class Connectivity(BaseModel):
+class Connectivity(Base):
     __tablename__ = "connectivity"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")

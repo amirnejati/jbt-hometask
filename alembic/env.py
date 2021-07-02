@@ -34,9 +34,9 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from modules.connectivity.models import BaseModel
+from modules.connectivity.models import Base
 
-target_metadata = BaseModel.metadata
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

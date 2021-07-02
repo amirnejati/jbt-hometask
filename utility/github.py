@@ -1,5 +1,5 @@
 import re
-from typing import AsyncGenerator, Set, Tuple, List
+from typing import AsyncGenerator, Set, Tuple, List, Dict
 from urllib.parse import urlencode
 
 import httpx
@@ -15,7 +15,7 @@ class Github:
         if token:
             self.request_headers.update({'Authorization': f'token {token}'})
         self.pagination_params = {'page': 1, 'per_page': 100}
-        self.response_headers = {}
+        self.response_headers: Dict[str, str] = {}
 
     def _continue_pagination(self) -> bool:
         """
@@ -87,7 +87,7 @@ class Github:
         For :param & :return values, please refer to the origin method.
         """
 
-        data = set()
+        data: Set[str] = set()
         func = self._get_organisations(username=username)
 
         async for result, err in func:

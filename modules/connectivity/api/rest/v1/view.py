@@ -1,16 +1,15 @@
-import asyncio
 from typing import Any, List
 
-from fastapi import APIRouter, Response, status, BackgroundTasks, Depends
-from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import JSON
+from fastapi import (
+    APIRouter, Response, status, BackgroundTasks, Depends,
+)
 from sqlalchemy.orm import Session
 
-
 from modules import deps
-from services import GithubFactory, TwitterFactory
+from modules.connectivity import crud
+from services.web import get_connectivity_relation
 from modules.connectivity.api.rest.v1 import schemas
-from modules.connectivity.models import Connectivity
+from helper.custom_exc_handlers import OnlineAccountException
 
 
 router = APIRouter()
@@ -35,23 +34,13 @@ async def realtime(
         background_tasks: BackgroundTasks,
         db: Session = Depends(deps.get_db),
 ) -> Any:
-    orgs_and_errs, friendship_and_errs = await asyncio.gather(
-        GithubFactory().organisations_in_common(dev1, dev2),
-        TwitterFactory().check_friendship(dev1, dev2),
-    )
-    common_orgs, errs1 = orgs_and_errs
-    have_friendship, errs2 = friendship_and_errs
 
-    data = {
-        'connected': True, 'organisations': common_orgs,
-    } if common_orgs and have_friendship else \
-        {'connected': False}
-    errors = errs1 + errs2
-
+    data, errors = await get_connectivity_relation(dev1, dev2)
     if errors:
         response.status_code = status.HTTP_404_NOT_FOUND
+        raise OnlineAccountException(msg=errors)
 
-    return {'data': data, 'errors': errors}
+    return data
 
 
 @router.get(
@@ -71,18 +60,4 @@ async def register(
         db: Session = Depends(deps.get_db),
 ) -> Any:
 
-    user1, user2 = sorted((dev1, dev2))
-    connectivity_history = db.query(
-        func.array_agg(
-            Connectivity.invocation,
-            type_=JSON(),
-        ).label('invocations'),
-    ).filter(
-        Connectivity.username1 == user1,
-        Connectivity.username2 == user2,
-    ).group_by(
-        Connectivity.username1,
-        Connectivity.username2,
-    ).first()
-
-    return connectivity_history['invocations']
+    return crud.get_connectivity_invocations_history(db, dev1, dev2)

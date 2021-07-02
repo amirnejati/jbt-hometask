@@ -1,17 +1,17 @@
-from typing import AsyncGenerator, List, Tuple, Optional
+from typing import AsyncGenerator, List, Tuple, Optional, Dict
 
 import httpx
 
 
 class Twitter:
     base_url = 'https://api.twitter.com'
-    request_headers = {}
+    request_headers: Dict[str, str] = {}
 
     def __init__(self, token: str):
         self.request_headers.update({'Authorization': f'Bearer {token}'})
 
     async def _check_users(self, *users: str) \
-            -> AsyncGenerator[Tuple[bool, str], None]:
+            -> AsyncGenerator[Tuple[str, bool], None]:
         """
         Validates account handlers on Twitter.
 

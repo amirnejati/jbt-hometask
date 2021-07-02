@@ -1,11 +1,13 @@
 from typing import Generator
 
-from db import DBSession
+from db import SessionLocal
 
 
 def get_db() -> Generator:
+    db = None
     try:
-        db = DBSession()
+        db = SessionLocal()
         yield db
     finally:
-        db.close()
+        if db:
+            db.close()

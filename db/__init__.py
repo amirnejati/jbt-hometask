@@ -17,5 +17,5 @@ def init_connection():
     return session
 
 
-DBSession = init_connection()
-BaseModel = declarative_base()
+SessionLocal = init_connection()
+Base = declarative_base()
