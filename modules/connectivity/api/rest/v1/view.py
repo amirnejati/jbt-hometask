@@ -40,6 +40,8 @@ async def realtime(
         response.status_code = status.HTTP_404_NOT_FOUND
         raise OnlineAccountException(msg=errors)
 
+    background_tasks.add_task(crud.add_connectivity_invocation, db, dev1, dev2, **data)
+
     return data
 
 

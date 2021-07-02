@@ -1,7 +1,8 @@
 import re
+from datetime import datetime
 from typing import List, Optional
-import ujson
 
+import ujson
 from pydantic import BaseModel
 
 
@@ -58,4 +59,4 @@ class RealtimeItem(BaseModel):
 
 
 class RegisterItem(RealtimeItem):
-    registered_at: str
+    registered_at: str = datetime.now().replace(microsecond=0).isoformat()

@@ -14,15 +14,12 @@ def add_connectivity_invocation(
         connected: bool, organisations: List[str] = None,
 ):
 
-    invocation = {'connected': connected, 'registered_at': func.now()}
-    if organisations:
-        invocation.update({'organisations': organisations})
-
-    invocation_item = schemas.RegisterItem(**invocation)
+    invocation = {'connected': connected, 'organisations': organisations}
+    invocation = schemas.RegisterItem(**invocation).dict(exclude_none=True)
 
     user1, user2 = sorted((user1, user2))
     db_item = models.Connectivity(
-        username1=user1, username2=user2, invocation=invocation_item,
+        username1=user1, username2=user2, invocation=invocation,
     )
     db.add(db_item)
     db.commit()
