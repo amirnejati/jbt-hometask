@@ -12,6 +12,7 @@ class Config:
     DEBUG = bool(os.environ['DEBUG'])
     TESTING = False
     DB_URL = os.environ['DB_URL']
+    REDIS_URL = os.environ['REDIS_URL']
     GITHUB_ACCESS_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
     TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
 

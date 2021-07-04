@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from modules import deps
 from modules.connectivity import crud
+from services.task import enqueue_task
 from services.web import get_connectivity_relation
 from modules.connectivity.api.rest.v1 import schemas
 from helper.custom_exc_handlers import OnlineAccountException
@@ -32,7 +33,6 @@ async def realtime(
         dev2: schemas.OnlineAccount,
         response: Response,
         background_tasks: BackgroundTasks,
-        db: Session = Depends(deps.get_db),
 ) -> Any:
 
     data, errors = await get_connectivity_relation(dev1, dev2)
@@ -40,7 +40,10 @@ async def realtime(
         response.status_code = status.HTTP_404_NOT_FOUND
         raise OnlineAccountException(msg=errors)
 
-    background_tasks.add_task(crud.add_connectivity_invocation, db, dev1, dev2, **data)
+    background_tasks.add_task(
+        enqueue_task,
+        crud.add_connectivity_invocation, None, dev1, dev2, **data
+    )
 
     return data
 

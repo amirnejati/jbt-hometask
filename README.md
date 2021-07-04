@@ -1,4 +1,3 @@
-1. async history into db
 1. unit-test
 1. dockerize
 1. flake

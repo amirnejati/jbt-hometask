@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import JSON
 
 from modules.connectivity import models
 from modules.connectivity.api.rest.v1 import schemas
+from modules.deps import get_db
 
 
 def add_connectivity_invocation(
@@ -13,6 +14,8 @@ def add_connectivity_invocation(
         user1: schemas.OnlineAccount, user2: schemas.OnlineAccount,
         connected: bool, organisations: List[str] = None,
 ):
+    if not db:  # in case of background-task call
+        db = next(get_db())
 
     invocation = {'connected': connected, 'organisations': organisations}
     invocation = schemas.RegisterItem(**invocation).dict(exclude_none=True)
