@@ -21,7 +21,7 @@ config = context.config
 # ---------------- added code here -------------------------#
 # this will overwrite the ini-file sqlalchemy.url path
 # with the path given in the config of the main code
-config.set_main_option("sqlalchemy.url", os.environ["DB_URL"])
+config.set_main_option("sqlalchemy.url", os.environ["SQLALCHEMY_DB_URL"])
 #------------------------------------------------------------#
 
 

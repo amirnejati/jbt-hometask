@@ -2,12 +2,15 @@ from redis import Redis
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy_utils import database_exists, create_database
 
 from config import Config
 
 
 def init_db_connection():
-    engine = create_engine(Config.DB_URL, pool_pre_ping=True)
+    engine = create_engine(Config.SQLALCHEMY_DB_URL, pool_pre_ping=True)
+    if not database_exists(Config.SQLALCHEMY_DB_URL):
+        create_database(Config.SQLALCHEMY_DB_URL)
     session_factory = sessionmaker(
         bind=engine,
         autoflush=False,

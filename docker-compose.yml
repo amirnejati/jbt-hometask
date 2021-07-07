@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  maindb:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jobandtalent
+    ports:
+      - "5432"
+
+  cachedb:
+    image: redis:alpine
+    command: redis-server
+    ports:
+      - "6379"
+
+  rq:
+    depends_on:
+      - cachedb
+    build: .
+    image: jobandtalent-webapp:latest
+    environment:
+      - REDIS_URL
+    command: rq worker --with-scheduler --url $REDIS_URL
+
+  webapp:
+    depends_on:
+      - maindb
+      - cachedb
+      - rq
+    image: jobandtalent-webapp:latest
+    environment:
+      WEB_CONCURRENCY: 1
+    command: bash docker-entrypoint.sh
+    volumes:
+      - ./.env:/app/.env
+    ports:
+      - "9090:8080"
