@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 class Config:
     DEBUG = bool(os.environ['DEBUG'])
     TESTING = False
-    DB_URL = os.environ['DB_URL']
+    SQLALCHEMY_DB_URL = os.environ['SQLALCHEMY_DB_URL']
     REDIS_URL = os.environ['REDIS_URL']
     GITHUB_ACCESS_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
     TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
