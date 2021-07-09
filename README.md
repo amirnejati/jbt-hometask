@@ -11,7 +11,7 @@ https://github.com/PyGithub/PyGithub
 
 
 alembic revision -m "first migration" --autogenerate --head head
-alembic upgrade head                                            
+alembic upgrade head
 
 to set up the git hook scripts at .git/hooks/pre-commit:
 pre-commit install
