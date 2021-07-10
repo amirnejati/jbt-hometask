@@ -17,10 +17,10 @@ class CustomRedisBackend(RedisBackend):
     def __init__(self):
         connection_kwargs = \
             ConnectionPool.from_url(Config.REDIS_URL).connection_kwargs
-        options = dict(
-            (i, connection_kwargs.get(i)) for i in
+        options = {
+            i: connection_kwargs.get(i) for i in
             ('host', 'port', 'db', 'password')
-        )
+        }
         super().__init__(**options)
 
 

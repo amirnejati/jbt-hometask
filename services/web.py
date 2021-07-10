@@ -10,13 +10,13 @@ from config import Config
 class TwitterFactory(Twitter):
 
     def __init__(self):
-        super(TwitterFactory, self).__init__(Config.TWITTER_ACCESS_TOKEN)
+        super().__init__(Config.TWITTER_ACCESS_TOKEN)
 
 
 class GithubFactory(Github):
 
     def __init__(self):
-        super(GithubFactory, self).__init__(Config.GITHUB_ACCESS_TOKEN)
+        super().__init__(Config.GITHUB_ACCESS_TOKEN)
 
     async def organisations_in_common(self, *users: str) \
             -> Tuple[Set[str], List[str]]:
