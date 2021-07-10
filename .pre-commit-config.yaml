@@ -2,7 +2,7 @@ exclude: ^(__pycache__|venv/|virtualenv/|\..+|alembic/)
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.20.0
+    rev: v2.21.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -44,6 +44,12 @@ repos:
       - id: black
         args: ["--skip-string-normalization"]
         language_version: python3
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+      - id: autoflake
+        args: ["--remove-all-unused-imports", "--recursive", "--remove-unused-variables", "--in-place"]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2
