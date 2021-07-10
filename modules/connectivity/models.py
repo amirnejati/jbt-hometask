@@ -1,6 +1,5 @@
 from sqlalchemy import (
-    JSON, Column, Integer, String, Index,
-    # DateTime, Boolean, func
+    JSON, Column, Index, Integer, String
 )
 
 from db import Base

@@ -1,10 +1,13 @@
-from typing import Tuple, List, Set
 import asyncio
-from functools import reduce
 
+from functools import reduce
+from typing import (
+    List, Set, Tuple
+)
+
+from config import Config
 from utility.github import Github
 from utility.twitter import Twitter
-from config import Config
 
 
 class TwitterFactory(Twitter):

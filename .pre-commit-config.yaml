@@ -31,7 +31,12 @@ repos:
     rev: 5.9.2
     hooks:
       - id: isort
-        args: ["--multi-line=5", "--line-length=79", "--use-parentheses", "--filter-files"]
+        args: [
+                "--multi-line=5", "--force-grid-wrap", "--line-length=79", "--use-parentheses",
+                "--lines-after-imports=2", "--lines-between-types=1",
+                "--filter-files", "--honor-noqa", "--combine-star", "--combine-as",
+                "--section-default FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
+        ]
 #        args: ["--profile", "black"]
 
   - repo: https://github.com/psf/black

@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 
 import modules.connectivity.api.rest.v1.view as connectivity_view_v1
-from helper.custom_renderer import CustomDataResponse
-from helper.custom_exc_handlers import exc_handlers
+
 from app import middleware_list
+from helper.custom_exc_handlers import exc_handlers
+from helper.custom_renderer import CustomDataResponse
 
 
 app = FastAPI(

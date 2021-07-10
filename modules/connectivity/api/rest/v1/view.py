@@ -1,16 +1,18 @@
-from typing import Any, List
+from typing import (
+    Any, List
+)
 
 from fastapi import (
-    APIRouter, Response, status, BackgroundTasks, Depends,
+    APIRouter, BackgroundTasks, Depends, Response, status
 )
 from sqlalchemy.orm import Session
 
+from helper.custom_exc_handlers import OnlineAccountException
 from modules import deps
 from modules.connectivity import crud
+from modules.connectivity.api.rest.v1 import schemas
 from services.task import enqueue_task
 from services.web import get_connectivity_relation
-from modules.connectivity.api.rest.v1 import schemas
-from helper.custom_exc_handlers import OnlineAccountException
 
 
 router = APIRouter()

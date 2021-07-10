@@ -1,5 +1,8 @@
 import re
-from typing import AsyncGenerator, Set, Tuple, List, Dict
+
+from typing import (
+    AsyncGenerator, Dict, List, Set, Tuple
+)
 from urllib.parse import urlencode
 
 import httpx

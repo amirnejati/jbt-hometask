@@ -1,4 +1,6 @@
-from typing import Callable, Any
+from typing import (
+    Any, Callable
+)
 
 from rq import Queue
 

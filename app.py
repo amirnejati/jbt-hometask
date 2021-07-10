@@ -1,10 +1,12 @@
 from typing import Tuple
 
+from fastapi import status
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
-from fastapi import status
-from ratelimit import RateLimitMiddleware, Rule
+from ratelimit import (
+    RateLimitMiddleware, Rule
+)
 from ratelimit.auths import EmptyInformation
 from ratelimit.backends.redis import RedisBackend
 from ratelimit.types import Scope

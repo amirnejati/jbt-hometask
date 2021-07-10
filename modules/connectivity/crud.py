@@ -1,8 +1,8 @@
 from typing import List
 
-from sqlalchemy.orm import Session
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.orm import Session
 
 from modules.connectivity import models
 from modules.connectivity.api.rest.v1 import schemas

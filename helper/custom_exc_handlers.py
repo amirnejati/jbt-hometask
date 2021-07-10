@@ -1,9 +1,10 @@
 from typing import Any
 
-from fastapi import Request, status
+from fastapi import (
+    Request, status
+)
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
-
 
 from config import Config
 from helper.custom_renderer import CustomErrResponse
