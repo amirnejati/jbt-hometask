@@ -55,12 +55,12 @@ repos:
     rev: 3.9.2
     hooks:
       - id: flake8
-        args: ["--select=B,C,E,F,W,T4,B9,Q0", "--ignore=W503", "--max-line-length=79", "--inline-quotes=single"]
+        args: ["--select=B,C,E,F,W,T4,B9,Q0", "--ignore=W503,B008", "--max-line-length=88", "--inline-quotes=single"]
         additional_dependencies:
           - flake8-bugbear
           - flake8-comprehensions
-#         - flake8-quotes
-#         - flake8-implicit-str-concat
+          - flake8-quotes
+          - flake8-implicit-str-concat
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.910

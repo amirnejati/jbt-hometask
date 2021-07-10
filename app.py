@@ -28,11 +28,11 @@ async def client_ip(scope: Scope) -> Tuple[str, str]:
 
     """
     ip = None
-    if scope["client"]:
-        ip, _ = tuple(scope["client"])
-    for name, value in scope["headers"]:  # type: bytes, bytes
-        if name == b"x-real-ip":
-            ip = value.decode("utf8")
+    if scope['client']:
+        ip, _ = tuple(scope['client'])
+    for name, value in scope['headers']:  # type: bytes, bytes
+        if name == b'x-real-ip':
+            ip = value.decode('utf8')
     if ip is None:
         raise EmptyInformation(scope)
     return ip, 'default'
@@ -41,23 +41,23 @@ async def client_ip(scope: Scope) -> Tuple[str, str]:
 def throttling_exception_handler(exc: Exception):
     return PlainTextResponse(
         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-        content="too many requests due to rate-limiting policy",
+        content='too many requests due to rate-limiting policy',
     )
 
 
 middleware_list = [
     Middleware(
         CORSMiddleware,
-        allow_origins=["*"],
-        allow_methods=["*"],
+        allow_origins=['*'],
+        allow_methods=['*'],
     ),
     Middleware(
         RateLimitMiddleware,
         authenticate=client_ip,
         backend=CustomRedisBackend(),
         config={
-            r"^/v1/connected/realtime": [Rule(minute=10, block_time=60)],
-            r"^/v1/connected/register": [Rule(minute=100, block_time=60)],
+            r'^/v1/connected/realtime': [Rule(minute=10, block_time=60)],
+            r'^/v1/connected/register': [Rule(minute=100, block_time=60)],
         },
         on_blocked=throttling_exception_handler,
     ),

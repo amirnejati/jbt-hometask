@@ -7,9 +7,9 @@ from helper.custom_renderer import CustomDataResponse
 
 
 app = FastAPI(
-    title="JobAndTalent Coding Test",
-    description="""job position: \"senior software developer \"""",
-    version="0.0.1",
+    title='JobAndTalent Coding Test',
+    description='job position: "senior software developer"',
+    version='0.0.1',
     default_response_class=CustomDataResponse,
     exception_handlers=exc_handlers,
     middleware=middleware_list,
@@ -22,10 +22,10 @@ if __name__ == '__main__':
     import uvicorn
 
     uvicorn.run(
-        "main:app",
-        host="127.0.0.1",
+        'main:app',
+        host='127.0.0.1',
         port=8000,
-        log_level="debug",
+        log_level='debug',
         reload=True,
         debug=True,
     )

@@ -9,6 +9,8 @@ from helper.custom_renderer import CustomErrResponse
 
 
 class OnlineAccountException(Exception):
+    __slots__ = 'msg'
+
     def __init__(self, msg: Any):
         self.msg = msg
 
