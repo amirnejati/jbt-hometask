@@ -27,10 +27,10 @@ router = APIRouter()
     response_model_exclude_unset=True,
 )
 async def realtime(
-        dev1: schemas.OnlineAccount,
-        dev2: schemas.OnlineAccount,
-        response: Response,
-        background_tasks: BackgroundTasks,
+    dev1: schemas.OnlineAccount,
+    dev2: schemas.OnlineAccount,
+    response: Response,
+    background_tasks: BackgroundTasks,
 ) -> Any:
 
     data, errors = await get_connectivity_relation(dev1, dev2)
@@ -39,8 +39,7 @@ async def realtime(
         raise OnlineAccountException(msg=errors)
 
     background_tasks.add_task(
-        enqueue_task,
-        crud.add_connectivity_invocation, None, dev1, dev2, **data
+        enqueue_task, crud.add_connectivity_invocation, None, dev1, dev2, **data
     )
 
     return data
@@ -58,9 +57,9 @@ async def realtime(
     response_model_exclude_unset=True,
 )
 async def register(
-        dev1: schemas.OnlineAccount,
-        dev2: schemas.OnlineAccount,
-        db: Session = Depends(deps.get_db),
+    dev1: schemas.OnlineAccount,
+    dev2: schemas.OnlineAccount,
+    db: Session = Depends(deps.get_db),
 ) -> Any:
 
     return crud.get_connectivity_invocations_history(db, dev1, dev2)

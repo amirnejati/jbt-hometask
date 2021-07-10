@@ -16,7 +16,8 @@ def init_db_connection():
         autoflush=False,
         autocommit=False,
         expire_on_commit=True,
-        twophase=False)
+        twophase=False,
+    )
     session = scoped_session(session_factory)
     return session
 

@@ -20,7 +20,12 @@ app.include_router(router=connectivity_view_v1.router, prefix='/v1/connected')
 
 if __name__ == '__main__':
     import uvicorn
+
     uvicorn.run(
-        "main:app", host="127.0.0.1", port=8000,
-        log_level="debug", reload=True, debug=True
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        log_level="debug",
+        reload=True,
+        debug=True,
     )

@@ -10,9 +10,11 @@ from modules.deps import get_db
 
 
 def add_connectivity_invocation(
-        db: Session,
-        user1: schemas.OnlineAccount, user2: schemas.OnlineAccount,
-        connected: bool, organisations: List[str] = None,
+    db: Session,
+    user1: schemas.OnlineAccount,
+    user2: schemas.OnlineAccount,
+    connected: bool,
+    organisations: List[str] = None,
 ):
     if not db:  # in case of background-task call
         db = next(get_db())
@@ -22,7 +24,9 @@ def add_connectivity_invocation(
 
     user1, user2 = sorted((user1, user2))
     db_item = models.Connectivity(
-        username1=user1, username2=user2, invocation=invocation,
+        username1=user1,
+        username2=user2,
+        invocation=invocation,
     )
     db.add(db_item)
     db.commit()
@@ -31,22 +35,28 @@ def add_connectivity_invocation(
 
 
 def get_connectivity_invocations_history(
-        db: Session,
-        user1: schemas.OnlineAccount, user2: schemas.OnlineAccount,
+    db: Session,
+    user1: schemas.OnlineAccount,
+    user2: schemas.OnlineAccount,
 ) -> List[schemas.RegisterItem]:
 
     user1, user2 = sorted((user1, user2))
-    connectivity_history = db.query(
-        func.array_agg(
-            models.Connectivity.invocation,
-            type_=JSON(),
-        ).label('invocations'),
-    ).filter(
-        models.Connectivity.username1 == user1,
-        models.Connectivity.username2 == user2,
-    ).group_by(
-        models.Connectivity.username1,
-        models.Connectivity.username2,
-    ).first()
+    connectivity_history = (
+        db.query(
+            func.array_agg(
+                models.Connectivity.invocation,
+                type_=JSON(),
+            ).label('invocations'),
+        )
+        .filter(
+            models.Connectivity.username1 == user1,
+            models.Connectivity.username2 == user2,
+        )
+        .group_by(
+            models.Connectivity.username1,
+            models.Connectivity.username2,
+        )
+        .first()
+    )
 
     return connectivity_history['invocations'] if connectivity_history else []

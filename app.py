@@ -15,11 +15,9 @@ from config import Config
 
 class CustomRedisBackend(RedisBackend):
     def __init__(self):
-        connection_kwargs = \
-            ConnectionPool.from_url(Config.REDIS_URL).connection_kwargs
+        connection_kwargs = ConnectionPool.from_url(Config.REDIS_URL).connection_kwargs
         options = {
-            i: connection_kwargs.get(i) for i in
-            ('host', 'port', 'db', 'password')
+            i: connection_kwargs.get(i) for i in ('host', 'port', 'db', 'password')
         }
         super().__init__(**options)
 
@@ -61,6 +59,6 @@ middleware_list = [
             r"^/v1/connected/realtime": [Rule(minute=10, block_time=60)],
             r"^/v1/connected/register": [Rule(minute=100, block_time=60)],
         },
-        on_blocked=throttling_exception_handler
+        on_blocked=throttling_exception_handler,
     ),
 ]

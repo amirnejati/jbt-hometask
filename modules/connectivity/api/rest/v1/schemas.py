@@ -7,7 +7,6 @@ from pydantic import BaseModel
 
 
 class OnlineAccount(str):
-
     @classmethod
     def __get_validators__(cls):
         yield cls.validate_twitter_username
@@ -39,8 +38,7 @@ class OnlineAccount(str):
 
         if not isinstance(v, str):
             raise TypeError('string required')
-        github_username_regex = \
-            r'^[a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38}$'
+        github_username_regex = r'^[a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38}$'
         if re.search(github_username_regex, v):
             return cls(v)
         raise ValueError(

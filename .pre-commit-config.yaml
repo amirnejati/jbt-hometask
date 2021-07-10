@@ -1,5 +1,4 @@
 exclude: ^(__pycache__|venv/|virtualenv/|\..+|alembic/)
-#stages: [commit]
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
@@ -43,6 +42,7 @@ repos:
     rev: 21.6b0
     hooks:
       - id: black
+        args: ["--skip-string-normalization"]
         language_version: python3
 
   - repo: https://github.com/PyCQA/flake8
