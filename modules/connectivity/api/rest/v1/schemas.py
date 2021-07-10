@@ -1,12 +1,8 @@
 import re
-
 from datetime import datetime
-from typing import (
-    List, Optional
-)
+from typing import List, Optional
 
 import ujson
-
 from pydantic import BaseModel
 
 

@@ -1,9 +1,6 @@
 import asyncio
-
 from functools import reduce
-from typing import (
-    List, Set, Tuple
-)
+from typing import List, Set, Tuple
 
 from config import Config
 from utility.github import Github

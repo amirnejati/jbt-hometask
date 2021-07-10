@@ -1,6 +1,4 @@
-from typing import (
-    AsyncGenerator, Dict, List, Optional, Tuple
-)
+from typing import AsyncGenerator, Dict, List, Optional, Tuple
 
 import httpx
 

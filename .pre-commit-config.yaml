@@ -31,13 +31,13 @@ repos:
     rev: 5.9.2
     hooks:
       - id: isort
-        args: [
-                "--multi-line=5", "--force-grid-wrap", "--line-length=79", "--use-parentheses",
-                "--lines-after-imports=2", "--lines-between-types=1",
-                "--filter-files", "--honor-noqa", "--combine-star", "--combine-as",
-                "--section-default FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
-        ]
-#        args: ["--profile", "black"]
+#        args: [
+#                "--multi-line=5", "--force-grid-wrap", "--line-length=88", "--use-parentheses",
+#                "--lines-after-imports=2", "--lines-between-types=1",
+#                "--filter-files", "--honor-noqa", "--combine-star", "--combine-as",
+#                "--section-default FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
+#        ]
+        args: ["--profile=black", "--lines-after-imports=2"]
 
   - repo: https://github.com/psf/black
     rev: 21.6b0
