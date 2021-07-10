@@ -12,7 +12,11 @@ repos:
     rev: 1.7.0
     hooks:
      - id: bandit
-       args: ["-r ./", "-t B102,B105,B301,B608"]
+       args:
+        - "--quiet"
+        - "--test=B102,B105,B301,B608"
+        - "--format=custom"
+        - "--msg-template={abspath}:{line}: {test_id}[bandit]: {severity}: {msg}"
        exclude: tests/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
