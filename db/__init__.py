@@ -7,7 +7,7 @@ from sqlalchemy_utils import create_database, database_exists
 from config import Config
 
 
-def init_db_connection():
+def init_db_connection() -> scoped_session:
     engine = create_engine(Config.SQLALCHEMY_DB_URL, pool_pre_ping=True)
     if not database_exists(Config.SQLALCHEMY_DB_URL):
         create_database(Config.SQLALCHEMY_DB_URL)
@@ -22,7 +22,7 @@ def init_db_connection():
     return session
 
 
-def init_redis_connection():
+def init_redis_connection() -> Redis:
     return Redis.from_url(Config.REDIS_URL)
 
 

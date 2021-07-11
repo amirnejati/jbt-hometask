@@ -15,7 +15,7 @@ def add_connectivity_invocation(
     user2: schemas.OnlineAccount,
     connected: bool,
     organisations: List[str] = None,
-):
+) -> models.Connectivity:
     if not db:  # in case of background-task call
         db = next(get_db())
 

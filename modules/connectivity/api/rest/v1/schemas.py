@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Callable, Generator
 
 import ujson
 from pydantic import BaseModel
@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 class OnlineAccount(str):
     @classmethod
-    def __get_validators__(cls):
+    def __get_validators__(cls) -> Generator[Callable[[str], str], None, None]:
         yield cls.validate_twitter_username
         yield cls.validate_github_username
 

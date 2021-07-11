@@ -14,7 +14,7 @@ from config import Config
 
 
 class CustomRedisBackend(RedisBackend):
-    def __init__(self):
+    def __init__(self) -> None:
         connection_kwargs = ConnectionPool.from_url(Config.REDIS_URL).connection_kwargs
         options = {
             i: connection_kwargs.get(i) for i in ('host', 'port', 'db', 'password')
@@ -38,7 +38,7 @@ async def client_ip(scope: Scope) -> Tuple[str, str]:
     return ip, 'default'
 
 
-def throttling_exception_handler(exc: Exception):
+def throttling_exception_handler(exc: Exception) -> PlainTextResponse:
     return PlainTextResponse(
         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
         content='too many requests due to rate-limiting policy',

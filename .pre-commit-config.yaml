@@ -72,5 +72,5 @@ repos:
     rev: v0.910
     hooks:
     -   id: mypy
-        args: [--no-strict-optional, --ignore-missing-imports]
-        additional_dependencies: [tokenize-rt==3.2.0]
+        args: [--ignore-missing-imports, --disallow-untyped-defs]
+        additional_dependencies: [types-redis, types-ujson]

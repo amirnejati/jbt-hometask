@@ -18,7 +18,7 @@ class OnlineAccountException(Exception):
 async def validation_exception_handler(
     request: Request,
     exc: RequestValidationError,
-):
+) -> CustomErrResponse:
     return CustomErrResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=exc.errors(),
@@ -28,14 +28,14 @@ async def validation_exception_handler(
 async def online_account_exception_handler(
     request: Request,
     exc: OnlineAccountException,
-):
+) -> CustomErrResponse:
     return CustomErrResponse(
         status_code=status.HTTP_404_NOT_FOUND,
         content=exc.msg,
     )
 
 
-async def server_error(request: Request, exc):
+async def server_error(request: Request, exc: Any) -> PlainTextResponse:
     if Config.DEBUG and str(exc):
         msg = str(exc)
     else:
