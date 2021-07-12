@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, List, Tuple, Optional, Dict
+from typing import AsyncGenerator, Dict, List, Optional, Tuple
 
 import httpx
 
@@ -10,8 +10,7 @@ class Twitter:
     def __init__(self, token: str):
         self.request_headers.update({'Authorization': f'Bearer {token}'})
 
-    async def _check_users(self, *users: str) \
-            -> AsyncGenerator[Tuple[str, bool], None]:
+    async def _check_users(self, *users: str) -> AsyncGenerator[Tuple[str, bool], None]:
         """
         Validates account handlers on Twitter.
 
@@ -20,10 +19,7 @@ class Twitter:
             - the str shows the corresponding username
         """
 
-        url = (
-            f'{self.base_url}/2/users/by'
-            f'?usernames={",".join(users)}'
-        )
+        url = f'{self.base_url}/2/users/by' f'?usernames={",".join(users)}'
 
         async with httpx.AsyncClient() as client:
             response = await client.get(url, headers=self.request_headers)
@@ -37,7 +33,9 @@ class Twitter:
             yield i['value'], True
 
     async def check_friendship(
-            self, source_user: str, target_user: str,
+        self,
+        source_user: str,
+        target_user: str,
     ) -> Tuple[Optional[bool], List[str]]:
         """
         Shows friendship between two accounts. Friendship means both users
@@ -60,11 +58,12 @@ class Twitter:
         if response.status_code == 404:
             errors = []
             async for username, has_error in self._check_users(
-                    source_user,
-                    target_user,
+                source_user,
+                target_user,
             ):
-                errors.append(f'"{username}" is not a valid user in twitter') \
-                    if has_error else None
+                errors.append(
+                    f'"{username}" is not a valid user in twitter'
+                ) if has_error else None
             if errors:
                 return None, errors
 

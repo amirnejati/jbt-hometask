@@ -1,5 +1,5 @@
 import re
-from typing import AsyncGenerator, Set, Tuple, List, Dict
+from typing import AsyncGenerator, Dict, List, Set, Tuple
 from urllib.parse import urlencode
 
 import httpx
@@ -30,26 +30,37 @@ class Github:
             - a boolean value which specified continue or not
         """
 
-        if 'Link' in self.response_headers \
-                and self.response_headers['Link'].find('"next"') > -1:
-            page = int(p[0]) if (
-                p := re.findall(
-                    r'\W+page=(\d+)[^<]+"next"',
-                    self.response_headers['Link'],
+        if (
+            'Link' in self.response_headers
+            and self.response_headers['Link'].find('"next"') > -1
+        ):
+            page = (
+                int(p[0])
+                if (
+                    p := re.findall(
+                        r'\W+page=(\d+)[^<]+"next"',
+                        self.response_headers['Link'],
+                    )
                 )
-            ) else 1
-            per_page = int(p[0]) if (
-                p := re.findall(
-                    r'\W+per_page=(\d+)[^<]+"next"',
-                    self.response_headers['Link'],
+                else 1
+            )
+            per_page = (
+                int(p[0])
+                if (
+                    p := re.findall(
+                        r'\W+per_page=(\d+)[^<]+"next"',
+                        self.response_headers['Link'],
+                    )
                 )
-            ) else 100
+                else 100
+            )
             self.pagination_params = {'page': page, 'per_page': per_page}
             return True
         return False
 
-    async def _get_organisations(self, username: str) \
-            -> AsyncGenerator[Tuple[Set[str], bool], None]:
+    async def _get_organisations(
+        self, username: str
+    ) -> AsyncGenerator[Tuple[Set[str], bool], None]:
         """
         A private method which calls Github API to get organisations related
         to an account.
@@ -80,8 +91,7 @@ class Github:
             async for result in self._get_organisations(username=username):
                 yield result
 
-    async def get_organisations(self, username: str) \
-            -> Tuple[Set[str], List[str]]:
+    async def get_organisations(self, username: str) -> Tuple[Set[str], List[str]]:
         """
         A wrapper method for calling :py:meth:`Github._get_organisations`.
         For :param & :return values, please refer to the origin method.

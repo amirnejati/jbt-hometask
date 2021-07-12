@@ -1,14 +1,75 @@
+exclude: ^(__pycache__|venv/|virtualenv/|\..+|alembic/)
+
 repos:
-- repo: https://github.com/pycqa/isort
-  rev: 5.8.0
-  hooks:
-    - id: isort
-      args: ["--multi-line=5", "--line-length=79", "--use-parentheses", "--filter-files"]
-      exclude: "venv"
-- repo: https://github.com/pycqa/flake8
-  rev: 3bcadce2a9d91f4bb6afa97b5d2d1a82d7a1e937
-  hooks:
-    - id: flake8
-      args: ["--select=B,C,E,F,W,T4,B9,Q0", "--ignore=W503", "--max-line-length=79", "--inline-quotes=single"]
-      exclude: "(codingtest|init.py)"
-      additional_dependencies: ["flake8-quotes"]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.21.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.0
+    hooks:
+     - id: bandit
+       args:
+        - "--quiet"
+        - "--test=B102,B105,B301,B608"
+        - "--format=custom"
+        - "--msg-template={abspath}:{line}: {test_id}[bandit]: {severity}: {msg}"
+       exclude: tests/
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: end-of-file-fixer
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.9.2
+    hooks:
+      - id: isort
+#        args: [
+#                "--multi-line=5", "--force-grid-wrap", "--line-length=88", "--use-parentheses",
+#                "--lines-after-imports=2", "--lines-between-types=1",
+#                "--filter-files", "--honor-noqa", "--combine-star", "--combine-as",
+#                "--section-default FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER",
+#        ]
+        args: ["--profile=black", "--lines-after-imports=2"]
+
+  - repo: https://github.com/psf/black
+    rev: 21.6b0
+    hooks:
+      - id: black
+        args: ["--skip-string-normalization"]
+        language_version: python3
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+      - id: autoflake
+        args: ["--remove-all-unused-imports", "--recursive", "--remove-unused-variables", "--in-place"]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
+        args: [
+          "--select=B,C,E,F,W,T4,B9,Q0",
+          "--ignore=W503,B008",
+          "--max-line-length=88",
+          "--inline-quotes=single",
+          "--max-complexity=10",
+        ]
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-quotes
+          - flake8-implicit-str-concat
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.910
+    hooks:
+    -   id: mypy
+        args: [--ignore-missing-imports, --disallow-untyped-defs]
+        additional_dependencies: [types-redis, types-ujson]

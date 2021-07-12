@@ -1,13 +1,13 @@
 from redis import Redis
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy_utils import create_database, database_exists
 
 from config import Config
 
 
-def init_db_connection():
+def init_db_connection() -> scoped_session:
     engine = create_engine(Config.SQLALCHEMY_DB_URL, pool_pre_ping=True)
     if not database_exists(Config.SQLALCHEMY_DB_URL):
         create_database(Config.SQLALCHEMY_DB_URL)
@@ -16,12 +16,13 @@ def init_db_connection():
         autoflush=False,
         autocommit=False,
         expire_on_commit=True,
-        twophase=False)
+        twophase=False,
+    )
     session = scoped_session(session_factory)
     return session
 
 
-def init_redis_connection():
+def init_redis_connection() -> Redis:
     return Redis.from_url(Config.REDIS_URL)
 
 
