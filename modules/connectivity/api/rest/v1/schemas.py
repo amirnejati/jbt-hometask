@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import List, Optional, Callable, Generator
+from typing import Callable, Generator, List, Optional
 
 import ujson
 from pydantic import BaseModel

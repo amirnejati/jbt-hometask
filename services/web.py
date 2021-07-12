@@ -1,6 +1,6 @@
 import asyncio
 from functools import reduce
-from typing import List, Set, Tuple, Dict
+from typing import Dict, List, Set, Tuple
 
 from config import Config
 from utility.github import Github
@@ -30,7 +30,10 @@ class GithubFactory(Github):
         return common_orgs, errors
 
 
-async def get_connectivity_relation(user1: str, user2: str) -> Tuple[Dict[str, object], List[str]]:
+async def get_connectivity_relation(
+    user1: str,
+    user2: str,
+) -> Tuple[Dict[str, object], List[str]]:
     orgs_and_errs, friendship_and_errs = await asyncio.gather(
         GithubFactory().organisations_in_common(user1, user2),
         TwitterFactory().check_friendship(user1, user2),
@@ -49,14 +52,3 @@ async def get_connectivity_relation(user1: str, user2: str) -> Tuple[Dict[str, o
     errors = errs1 + errs2
 
     return data, errors
-
-
-if __name__ == '__main__':
-    t = TwitterFactory()
-    # x = asyncio.run(t.check_friendship('amirhnejatii', 'bitcodr'))
-    # print(x)
-
-    g = GithubFactory()
-    # x = asyncio.run(g.get_organisations(username='mitsuhiko'))
-    # x, y = asyncio.run(g.organisations_in_common('mitsuhiko', 'davidism'))
-    # print(x, y)
