@@ -56,8 +56,18 @@ middleware_list = [
         authenticate=client_ip,
         backend=CustomRedisBackend(),
         config={
-            r'^/v1/connected/realtime': [Rule(minute=10, block_time=60)],
-            r'^/v1/connected/register': [Rule(minute=100, block_time=60)],
+            r'^/v1/connected/realtime': [
+                Rule(
+                    minute=Config.ALLOWED_REQUESTS_PER_MINUTE,
+                    block_time=Config.THROTTLING_DENY_SECONDS,
+                )
+            ],
+            r'^/v1/connected/register': [
+                Rule(
+                    minute=Config.ALLOWED_REQUESTS_PER_MINUTE * 10,
+                    block_time=Config.THROTTLING_DENY_SECONDS,
+                )
+            ],
         },
         on_blocked=throttling_exception_handler,
     ),
