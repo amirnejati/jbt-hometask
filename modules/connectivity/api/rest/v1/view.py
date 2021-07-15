@@ -7,6 +7,7 @@ from helper.custom_exc_handlers import OnlineAccountException
 from modules import deps
 from modules.connectivity import crud
 from modules.connectivity.api.rest.v1 import schemas
+from services.basic_auth import apply_basic_auth
 from services.task import enqueue_task
 from services.web import get_connectivity_relation
 
@@ -25,6 +26,7 @@ router = APIRouter()
     ),
     response_model=schemas.RealtimeItem,
     response_model_exclude_unset=True,
+    dependencies=[Depends(apply_basic_auth)],
 )
 async def realtime(
     dev1: schemas.OnlineAccount,

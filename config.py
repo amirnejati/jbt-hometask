@@ -17,6 +17,8 @@ class Config:
     THROTTLING_DENY_SECONDS = int(os.getenv('THROTTLING_DENY_SECONDS', 60))
     GITHUB_ACCESS_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
     TWITTER_ACCESS_TOKEN = os.environ['TWITTER_ACCESS_TOKEN']
+    BASIC_AUTH_USER = os.environ['BASIC_AUTH_USER']
+    BASIC_AUTH_PASS = os.environ['BASIC_AUTH_PASS']
 
 
 class TestingConfig(Config):
