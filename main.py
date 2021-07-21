@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 
 import modules.connectivity.api.rest.v1.view as connectivity_view_v1
-from app import middleware_list
-from helper.custom_exc_handlers import exc_handlers
-from helper.custom_renderer import CustomDataResponse
+from common.helper.custom_exc_handlers import exc_handlers
+from common.helper.custom_renderer import CustomDataResponse
+from common.log_setter import load_logging_configuration
+from common.middlewares import middleware_list
 
+
+load_logging_configuration()
 
 app = FastAPI(
     title='JobAndTalent Coding Test',

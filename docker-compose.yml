@@ -3,7 +3,7 @@ version: '3'
 services:
 
   maindb:
-    image: postgres:alpine
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -38,5 +38,6 @@ services:
     command: bash docker-entrypoint.sh
     volumes:
       - ./.env:/app/.env
+      - ./logging.log:/app/logging.log
     ports:
       - "9090:8080"

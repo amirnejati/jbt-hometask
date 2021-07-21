@@ -3,7 +3,7 @@ from typing import Any, List
 from fastapi import APIRouter, BackgroundTasks, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from helper.custom_exc_handlers import OnlineAccountException
+from common.helper.custom_exc_handlers import OnlineAccountException
 from modules import deps
 from modules.connectivity import crud
 from modules.connectivity.api.rest.v1 import schemas

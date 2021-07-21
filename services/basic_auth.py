@@ -19,6 +19,6 @@ def apply_basic_auth(credentials: HTTPBasicCredentials = Depends(security)) -> N
     if not (is_username_correct and is_password_correct):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='incorrect username or password',
+            detail={'username': credentials.username, 'password': credentials.password},
             headers={'WWW-Authenticate': 'Basic'},
         )
