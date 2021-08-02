@@ -72,4 +72,4 @@ repos:
     hooks:
     -   id: mypy
         args: [--config-file, mypy.ini]
-        additional_dependencies: [pydantic, types-redis, types-ujson]
+        additional_dependencies: [pydantic, types-redis, types-ujson, types-PyYAML]
