@@ -9,11 +9,13 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 ENV PYTHONUNBUFFERED 1
 
+COPY . /app
+
 WORKDIR /app
 
-COPY requirements/prod.txt /app/prod.txt
-COPY requirements/base.txt /app/base.txt
-RUN pip install -r prod.txt
+ARG ENVMODE=dev
+ENV ENV_MODE=${ENVMODE}
 
-COPY . /app
+RUN if [ "$ENVMODE" = "prod" ] ; then pip install -r requirements/prod.txt ; else pip install -r requirements/dev.txt ; fi
+
 ENV PYTHONPATH=/app

@@ -3,11 +3,9 @@ from fastapi import FastAPI
 import modules.connectivity.api.rest.v1.view as connectivity_view_v1
 from common.helper.custom_exc_handlers import exc_handlers
 from common.helper.custom_renderer import CustomDataResponse
-from common.log_setter import load_logging_configuration
 from common.middlewares import middleware_list
+from config import Config
 
-
-load_logging_configuration()
 
 app = FastAPI(
     title='JobAndTalent Coding Test',
@@ -30,5 +28,5 @@ if __name__ == '__main__':
         port=8000,
         log_level='debug',
         reload=True,
-        debug=True,
+        debug=Config.DEBUG,
     )

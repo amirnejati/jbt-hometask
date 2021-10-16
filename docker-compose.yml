@@ -1,43 +1,49 @@
-version: '3'
+version: '3.9'
 
 services:
 
-  maindb:
-    image: postgres:latest
+  postgres:
+    image: postgres:13.4-alpine
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: jobandtalent
+      POSTGRES_USER: ${POSTGRES_USER?Variable not set}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD?Variable not set}
+      POSTGRES_DB: ${POSTGRES_DB?Variable not set}
     ports:
       - "5432"
+    healthcheck:
+      test: pg_isready -h 127.0.0.1 -p 5432
+      timeout: 5s
+      retries: 5
+      interval: 5s
 
-  cachedb:
-    image: redis:alpine
+  redis:
+    image: redis:6.2-alpine
     command: redis-server
     ports:
       - "6379"
 
   rq:
-    depends_on:
-      - cachedb
     build: .
-    image: jobandtalent-webapp:latest
-    environment:
-      - REDIS_URL
-    command: rq worker --with-scheduler --url $REDIS_URL
+    image: jobandtalent-webapp:${ENV_MODE:-dev}
+    command: rq worker --with-scheduler --url ${REDIS_URL?Variable not set}
+    depends_on:
+      - redis
 
   webapp:
-    depends_on:
-      - maindb
-      - cachedb
-      - rq
-    image: jobandtalent-webapp:latest
-    environment:
-      WEB_CONCURRENCY: 1
+    image: jobandtalent-webapp:${ENV_MODE:-dev}
     command: bash docker-entrypoint.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rq:
+        condition: service_started
+    environment:
+      WEB_CONCURRENCY: 1  # number of worker processes for uvicorn
     volumes:
-      - ./.env:/app/.env
+      - ./.env.${ENV_MODE:-dev}:/app/.env.${ENV_MODE:-dev}
       - ./logs/:/app/logs/
     ports:
       - "8000:8080"
