@@ -1,29 +1,20 @@
-# ---------------- added code here -------------------------#
-import os
-import sys
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
-from sqlalchemy import engine_from_config, pool
-
 from alembic import context
-from config import BASE_DIR
+from sqlalchemy import engine_from_config, pool
+from sqlalchemy_utils import create_database, database_exists
 
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-sys.path.append(BASE_DIR)
-#------------------------------------------------------------#
+from config import Config
+from modules.connectivity.models import Base
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-# ---------------- added code here -------------------------#
 # this will overwrite the ini-file sqlalchemy.url path
 # with the path given in the config of the main code
-config.set_main_option("sqlalchemy.url", os.environ["SQLALCHEMY_DB_URL"])
-#------------------------------------------------------------#
-
+config.set_main_option("sqlalchemy.url", Config.SQLALCHEMY_DB_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -33,9 +24,6 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-
-from modules.connectivity.models import Base
-
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -80,6 +68,9 @@ def run_migrations_online():
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
+
+    if not database_exists(connectable.url):
+        create_database(connectable.url)
 
     with connectable.connect() as connection:
         context.configure(
