@@ -1,9 +1,9 @@
-from enum import Enum
 import os
 import secrets
+from enum import Enum
 from typing import Any, Dict, Optional
 
-from pydantic import BaseSettings, RedisDsn, PositiveInt, PostgresDsn, validator
+from pydantic import BaseSettings, PositiveInt, PostgresDsn, RedisDsn, validator
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -40,7 +40,9 @@ class Settings(BaseSettings):
     SQLALCHEMY_DB_URL: Optional[PostgresDsn] = None
 
     @validator('SQLALCHEMY_DB_URL', pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    def assemble_db_connection(
+        cls, v: Optional[str], values: Dict[str, Any]  # noqa: B902
+    ) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
