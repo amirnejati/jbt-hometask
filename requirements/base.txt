@@ -8,5 +8,5 @@ PyYAML==5.4.1
 rq==1.9.0
 SQLAlchemy==1.4.20
 SQLAlchemy-Utils==0.37.8
-ujson==4.0.2
+ujson==5.4.0
 uvicorn==0.14.0
